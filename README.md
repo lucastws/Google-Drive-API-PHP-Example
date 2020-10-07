@@ -7,7 +7,7 @@ This is an improved version of [yannisg/Google-Drive-Uploader-PHP](https://githu
 - Chunked upload to support large files;
 - Now you can upload to specific folders! (check the comment inside "controllerUpload.php");
 - Already includes the required Google API in folder "libraries";
-- Includes a simply and undestandable example in index.php with a file input and submit to a script (controllerUpload.php) that do the trick using gdrive_token.php.
+- Includes a simply and undestandable example in index.php with a file input and submit to a script (controllerUpload.php) that does the trick using gdrive_token.php.
 
 ### To get started:
 1. Have your project already set up (if not, do it here: https://console.developers.google.com/cloud-resource-manager);
