@@ -63,16 +63,19 @@ class gdrive
 	function uploadFile()
 	{
 		$client = $this->client;
+		$service = new Google_Service_Drive($client);
 		
 		$file = new Google_Service_Drive_DriveFile();
 		$file->name = $this->fileName;
 		$chunkSizeBytes = 1 * 1024 * 1024;
+
+		// To upload the file into a folder uncomment the line below and give the folder id.
+		//$file->setParents(array('folderId'));
 		
 		$fileRequest = $this->fileRequest;
 		$fileTmpName = $this->fileRequest['tmp_name'];
 		$fileMimeType = $this->fileMimeType;
-		
-		$service = new Google_Service_Drive($client);
+	
 		$request = $service->files->create($file);
 
 		// Create a media file upload to represent our upload process.

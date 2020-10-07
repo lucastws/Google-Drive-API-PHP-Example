@@ -48,7 +48,7 @@ else
     <body>
         <header><h1>Token Generator</h1></header>
         <?php
-        if ($client->getAccessToken()) 
+        if($client->getAccessToken()) 
         {
             $_SESSION['token'] = $client->getAccessToken();
             $token = $_SESSION['token'];

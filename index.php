@@ -2,7 +2,8 @@
 session_start();
 
 if (!isset($_SESSION['token'])) {
-	exit(header("Location: gdrive_token.php"));
+	if(!file_get_contents(__DIR__ . "/token.txt")) exit(header("Location: gdrive_token.php"));
+	else $_SESSION['token'] = file_get_contents(__DIR__ . "/token.txt");
 }
 ?>
 <html>
