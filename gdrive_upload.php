@@ -8,6 +8,7 @@ class gdrive
 	
 	// Variables
 	var $fileRequest;
+	var $fileParentId;
 	var $fileMimeType;
 	var $fileName;
 	var $filePath;
@@ -69,8 +70,8 @@ class gdrive
 		$file->name = $this->fileName;
 		$chunkSizeBytes = 1 * 1024 * 1024;
 
-		// To upload the file into a folder uncomment the line below and give the folder id.
-		//$file->setParents(array('folderId'));
+		// Folder to upload file to
+		if(isset($this->fileParentId)) $file->setParents(array($this->fileParentId));
 		
 		$fileRequest = $this->fileRequest;
 		$fileTmpName = $this->fileRequest['tmp_name'];
