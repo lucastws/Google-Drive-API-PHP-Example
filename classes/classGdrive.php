@@ -2,21 +2,22 @@
 class gdrive
 {	
 	// Credentials (get those from google developer console https://console.developers.google.com/)
-	var $clientId = '';
-	var $clientSecret = '';
-	var $redirectUri = ''; // REMEMBER to add this token script URI in your authorized redirects URIs (example: 'http://localhost/Google-Drive-Uploader-PHP/gdrive_token.php')
-	
-	// Variables
+	var $clientId = '35286266903-ucgh4mcrmt7pan8l3dets3m567fle62h.apps.googleusercontent.com';
+	var $clientSecret = 'DcVEWwTvQG3lOTNjYj0qjOQk';
+	var $redirectUri = 'http://localhost:8080/Google-Drive-Uploader-PHP/gdrive_upload.php'; // REMEMBER to add this token script URI in your authorized redirects URIs (example: 'http://localhost/Google-Drive-Uploader-PHP/gdrive_token.php')
+	var $client;
+
+	// Files
 	var $fileRequest;
+	var $fileId;
 	var $fileParentId;
 	var $fileMimeType;
 	var $fileName;
 	var $filePath;
-	var $client;
 		
 	function __construct()
 	{
-		require_once 'libraries/google-api-2.7.0/vendor/autoload.php'; // If there is a newer version and you and to update get from here: https://github.com/google/google-api-php-client.git
+		require_once dirname(__FILE__) . "/../libraries/google-api-2.7.0/vendor/autoload.php"; // If there is a newer version and you and to update get from here: https://github.com/google/google-api-php-client.git
 		$this->client = new Google_Client();
 	}
 	
@@ -29,19 +30,14 @@ class gdrive
 		$client->setClientSecret($this->clientSecret);
 		$client->setRedirectUri($this->redirectUri);
 
-		$refreshToken = file_get_contents(__DIR__ . "/token.txt"); 
+		$refreshToken = file_get_contents(__DIR__ . "/../token.txt"); 
 		$client->refreshToken($refreshToken);
 		$tokens = $client->getAccessToken();
 		$client->setAccessToken($tokens);
-		
-		$client->setDefer(true);
-		$this->processFile();
-		
 	}
 	
 	function processFile()
 	{
-		
 		$fileRequest = $this->fileRequest;
 		$fileName = $this->fileRequest['name'];
 		$fileTmpName = $this->fileRequest['tmp_name'];
@@ -58,12 +54,13 @@ class gdrive
 		echo nl2br("File MIME type: '" . $this->fileMimeType . "'...\n");
 		
 		$this->uploadFile();
-
 	}
 	
 	function uploadFile()
 	{
 		$client = $this->client;
+		$client->setDefer(true);
+
 		$service = new Google_Service_Drive($client);
 		
 		$file = new Google_Service_Drive_DriveFile();
@@ -107,13 +104,32 @@ class gdrive
 		// The final value of $status will be the data from the API for the object that has been uploaded.
 		$result = false;
 		if($status != false) {
-			echo nl2br("File '" . $this->fileName . "' successfully uploaded!");
+			echo nl2br("File '" . $this->fileName . "' successfully uploaded!\n");
 			$result = $status;
+
+			echo nl2br('Uploaded file id: ' . $result['id']);
 		}
 
 		fclose($handle);
 
-		$client->setDefer(false); // Reset to the client to execute requests immediately in the future.
+		$client->setDefer(false);
+	}
+
+	function downloadFile()
+	{
+		$client = $this->client;
+
+		$service = new Google_Service_Drive($client);
+
+		$file_drive = $service->files->get($this->fileId);
+		$file_media = $service->files->get($this->fileId, ['alt' => 'media']);
+
+		$fileName = $file_drive->getName();
+		$fileMimeType = $file_drive->getMimeType();
+
+		header('Content-type: ' . $fileMimeType);
+		header('Content-Disposition: attachment; filename="' . $fileName . '"');
+		echo $file->getBody();
 	}
 }
 ?>

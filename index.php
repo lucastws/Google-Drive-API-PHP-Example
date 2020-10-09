@@ -1,24 +1,26 @@
 <?php
-session_start();
-
-if (!isset($_SESSION['token'])) {
-	if(!file_get_contents(__DIR__ . "/token.txt")) exit(header("Location: gdrive_token.php"));
-	else $_SESSION['token'] = file_get_contents(__DIR__ . "/token.txt");
-}
+//require_once dirname(__FILE__) . "/gdrive_token.php"
 ?>
 <html>
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-	<title>Google Drive PHP Uploader</title>
+	<title>Google Drive Api PHP Example</title>
 </head>
 <body>
-	<form action="controllers/controllerUpload.php" method="post" enctype="multipart/form-data">
+	<h1>Upload & Download Examples</h1>
+	<form action="controllers/controllerTest.php" method="post" enctype="multipart/form-data">
 		Select file to upload:
 		<input type="file" name="fileToUpload">
 		<br>
 		<input type="submit" value="Upload" name="submit">
+		<br>
+		<br>
+		Input file id to download:
+		<input type="text" name="fileIdToDownload" size="50">
+		<br>
+		<input type="submit" value="Download" name="submit">
 		<br>
 		<br>
 	</form>
