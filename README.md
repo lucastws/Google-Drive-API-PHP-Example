@@ -24,11 +24,11 @@ include_once "classes/classGdrive.php";
 require_once "/../gdrive_token.php";
 
 $file = $_FILES["fileToUpload"]; // Name of the file input from the view page
-$token = $_SESSION["token"]; // Getting the token previously stored in session by gdrive_token.php
+$refreshToken = $_SESSION["token"]["refresh_token"]; // Getting the refresh token previously stored in session by gdrive_token.php
 
 $gdrive = new gdrive;
 $gdrive->fileRequest = $file;
-$gdrive->initialize($token);
+$gdrive->initialize($refreshToken);
 $gdrive->processFile();
 ```
 
