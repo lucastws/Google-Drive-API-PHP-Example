@@ -2,9 +2,9 @@
 require_once dirname(__FILE__) . "/libraries/google-api-2.7.0/vendor/autoload.php"; // If there is a newer version and you and to update get from here: https://github.com/google/google-api-php-client.git
 
 // Credentials (get those from Google Developer Console (https://console.developers.google.com/))
-$clientId = '35286266903-ucgh4mcrmt7pan8l3dets3m567fle62h.apps.googleusercontent.com';
-$clientSecret = 'DcVEWwTvQG3lOTNjYj0qjOQk';
-$redirectUri = 'http://localhost:8080/Google-Drive-Uploader-PHP/gdrive_token.php'; // REMEMBER to add this token script URI in your authorized redirects URIs (example: 'http://localhost/Google-Drive-Uploader-PHP/gdrive_token.php')
+$clientId = '';
+$clientSecret = '';
+$redirectUri = ''; // REMEMBER to add this token script URI in your authorized redirects URIs (example: 'http://localhost/Google-Drive-Uploader-PHP/gdrive_token.php')
 
 session_start();
 
@@ -32,6 +32,14 @@ else
 	if (isset($_SESSION['token'])) 
 	{
 	    $client->setAccessToken($_SESSION['token']);
+
+	    $token = $_SESSION['token'];
+	    $refreshToken = $token['refresh_token'];
+   		if(!file_exists(__DIR__ . "/token.txt") || $refreshToken != file_get_contents(__DIR__ . "/token.txt"))
+   		{
+			$saveToken = file_put_contents("token.txt", $token['refresh_token']); // Saving the refresh token in a text file
+			if($saveToken) echo 'Token stored successfully!<br>';
+		}
 	}
 	else if(file_exists(__DIR__ . "/token.txt") && file_get_contents(__DIR__ . "/token.txt"))
 	{
@@ -41,6 +49,15 @@ else
 		$client->setAccessToken($tokens);
 
 		$_SESSION['token'] = $client->getAccessToken();
+		echo 'Token saved successfully!<br>';
+
+		$token = $_SESSION['token'];
+	    $refreshToken = $token['refresh_token'];
+   		if($refreshToken != file_get_contents(__DIR__ . "/token.txt"))
+   		{
+			$saveToken = file_put_contents("token.txt", $token['refresh_token']); // Saving the refresh token in a text file
+			if($saveToken) echo 'Token stored successfully!<br>';
+		}
 	}
 }
 
@@ -61,10 +78,7 @@ if($client->getAccessToken())
     $_SESSION['token'] = $client->getAccessToken();
     $token = $_SESSION['token'];
     echo "Access Token = " . $token['access_token'] . '<br>';
-    echo "Refresh Token = " . $token['refresh_token'] . '<br>';
-   
-	$saveToken = file_put_contents("token.txt", $token['refresh_token']); // Saving the refresh token in a text file
-	if($saveToken) echo 'Token saved successfully!<br>';
+    echo "Refresh Token = " . $token['refresh_token'] . '<br><br>';
 } 
 else 
 {

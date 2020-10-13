@@ -2,9 +2,9 @@
 class gdrive
 {	
 	// Credentials (get those from google developer console https://console.developers.google.com/)
-	var $clientId = '35286266903-ucgh4mcrmt7pan8l3dets3m567fle62h.apps.googleusercontent.com';
-	var $clientSecret = 'DcVEWwTvQG3lOTNjYj0qjOQk';
-	var $redirectUri = 'http://localhost:8080/Google-Drive-Uploader-PHP/gdrive_upload.php'; // REMEMBER to add this token script URI in your authorized redirects URIs (example: 'http://localhost/Google-Drive-Uploader-PHP/gdrive_token.php')
+	var $clientId = '';
+	var $clientSecret = '';
+	var $redirectUri = ''; // REMEMBER to add this token script URI in your authorized redirects URIs (example: 'http://localhost/Google-Drive-Uploader-PHP/gdrive_token.php')
 	var $client;
 
 	// Files
@@ -21,7 +21,7 @@ class gdrive
 		$this->client = new Google_Client();
 	}
 	
-	function initialize()
+	function initialize($refreshToken)
 	{
 		echo nl2br("Initializing class...\n");
 		$client = $this->client;
@@ -30,10 +30,16 @@ class gdrive
 		$client->setClientSecret($this->clientSecret);
 		$client->setRedirectUri($this->redirectUri);
 
-		$refreshToken = file_get_contents(__DIR__ . "/../token.txt"); 
-		$client->refreshToken($refreshToken);
-		$tokens = $client->getAccessToken();
-		$client->setAccessToken($tokens);
+		try
+		{ 
+			$client->refreshToken($refreshToken);
+			$tokens = $client->getAccessToken();
+			$client->setAccessToken($tokens);
+		}
+		catch(Exception $ex) 
+		{
+			exit(print "Error uploading a file: " . $ex);
+		} 	
 	}
 	
 	function processFile()

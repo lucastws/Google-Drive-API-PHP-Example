@@ -1,5 +1,5 @@
 <?php
-//require_once dirname(__FILE__) . "/gdrive_token.php"
+require_once dirname(__FILE__) . "/gdrive_token.php"
 ?>
 <html>
 <head>
