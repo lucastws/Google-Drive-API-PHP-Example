@@ -1,4 +1,4 @@
-## Upload input files to your Google Drive via Google Drive API using PHP.
+## Upload and download files from your Google Drive via Google Drive API using PHP.
 
 This is an improved version of [yannisg/Google-Drive-Uploader-PHP](https://github.com/yannisg/Google-Drive-Uploader-PHP) with small fixes and changes. Credits also goes to [yannisg](https://github.com/yannisg). 
 
