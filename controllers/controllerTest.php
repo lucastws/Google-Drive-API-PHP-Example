@@ -3,7 +3,7 @@ include_once dirname(__FILE__) . "/../classes/classGdrive.php";
 require_once dirname(__FILE__) . "/../gdrive_token.php";
 
 $submit = $_POST["submit"];
-$token = $_SESSION["token"];
+$refreshToken = $_SESSION["token"]["refresh_token"];
 
 switch($submit)
 {
@@ -21,7 +21,7 @@ switch($submit)
 		*/
 		//$gdrive->fileParentId = "";
 
-		$gdrive->initialize($token);
+		$gdrive->initialize($refreshToken);
 		$gdrive->processFile();
 
 		echo "<br><br><a class='main' href='../index.php'>Go back to main page</a>";
@@ -33,7 +33,7 @@ switch($submit)
 		$gdrive = new gdrive;
 		$gdrive->fileId = $_POST["fileIdToDownload"];
 
-		$gdrive->initialize($token);
+		$gdrive->initialize($refreshToken);
 		$gdrive->downloadFile();
 
 		echo "<br><br><a class='main' href='../index.php'>Go back to main page</a>";
