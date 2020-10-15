@@ -133,9 +133,21 @@ class gdrive
 		$fileName = $file_drive->getName();
 		$fileMimeType = $file_drive->getMimeType();
 
-		header('Content-type: ' . $fileMimeType);
-		header('Content-Disposition: attachment; filename="' . $fileName . '"');
-		echo $file->getBody();
+		$tmpFilePath = "../tmp_download/" . $fileName;
+
+		file_put_contents($tmpFilePath, $file_media->getBody());
+
+		header('Content-Type: ' . $fileMimeType);
+		header('Content-Disposition: attachment; filename=' . $fileName);
+		header('Pragma: no-cache');
+
+		while (ob_get_level()) {
+    		ob_end_clean();
+		}
+
+		echo file_get_contents($tmpFilePath);
+
+		unlink($tmpFilePath);
 	}
 }
 ?>
